@@ -1,0 +1,22 @@
+source: https://github.com/merrr134/sbp-website
+features:
+  - mysql
+  - php
+nginx:
+  root: public
+  fastcgi: "on"
+  locations:
+    - match: /
+      try_files: "$uri $uri/ /index.php?$query_string"
+commands:
+  - composer install --no-dev --optimize-autoloader
+  - npm install
+  - npm run build
+  - cp -n .env.example .env
+  - php artisan key:generate
+  - php artisan migrate --force
+  - php artisan db:seed --force
+  - php artisan storage:link
+  - php artisan config:cache
+  - php artisan route:cache
+  - php artisan view:cache
